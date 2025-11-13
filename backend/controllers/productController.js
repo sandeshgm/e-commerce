@@ -22,7 +22,7 @@ const getProducts = async (req, res) => {
   try {
     const {
       page = 1,
-      limit = 4,
+      limit = 8,
       search = "",
       order,
       minPrice,

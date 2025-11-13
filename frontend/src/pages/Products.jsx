@@ -2,11 +2,15 @@ import { useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { useQuery } from "@tanstack/react-query";
 import api from "../api/axios";
+import { Home } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Products = () => {
   const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(4);
+  const [rowsPerPage, setRowsPerPage] = useState(8);
   const [order, setOrder] = useState("");
+  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   // Handle page and sort changes
   const handlePageChange = (newPage) => {
@@ -23,15 +27,25 @@ const Products = () => {
     setPage(1);
   };
 
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+    setPage(1);
+  };
+
+  const home = () => {
+    navigate("/");
+  };
+
   // Fetch products
   const { data, isLoading } = useQuery({
-    queryKey: ["products", { order, page, rowsPerPage }],
+    queryKey: ["products", { order, page, rowsPerPage, search }],
     queryFn: async () => {
       const res = await api.get("/products", {
         params: {
           order,
           page,
           limit: rowsPerPage,
+          search,
         },
       });
       return res.data;
@@ -40,7 +54,7 @@ const Products = () => {
 
   const totalPages = data ? Math.ceil(data.total / rowsPerPage) : 0;
 
-  // Simple skeleton loader (custom)
+  //  loader
   const Loader = () => (
     <div className="animate-pulse space-y-4">
       <div className="w-full h-60 bg-gray-300 rounded-lg"></div>
@@ -50,29 +64,61 @@ const Products = () => {
   );
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      {/* Sort dropdown */}
-      <div className="mb-6">
-        <label
-          htmlFor="order"
-          className="block text-sm font-medium text-gray-700 mb-2"
-        >
-          Sort By
-        </label>
-        <select
-          id="order"
-          value={order}
-          onChange={handleOrderChange}
-          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
-        >
-          <option value="">None</option>
-          <option value="asc">Price: Low → High</option>
-          <option value="desc">Price: High → Low</option>
-        </select>
+    <div className="container mx-auto px-4 py-6 bg-blue-50">
+      {/* Top Bar */}
+      <div className="w-full bg-gray-300 border-b border-gray-400 shadow-lg py-6 px-8">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
+          {/* Home Button */}
+          <button
+            onClick={home}
+            className="flex items-center gap-3 px-8 py-4 bg-indigo-700 text-white text-xl font-bold rounded-lg shadow-lg hover:bg-indigo-800 active:scale-95 transition-all duration-200"
+          >
+            <Home size={50} />
+            <span>Home</span>
+          </button>
+
+          {/* Search bar */}
+          <div className="w-full sm:w-1/2">
+            <label
+              htmlFor="search"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Search
+            </label>
+            <input
+              id="search"
+              type="text"
+              value={search}
+              onChange={handleSearchChange}
+              placeholder="Search products..."
+              className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          {/* Sort dropdown */}
+          <div className="w-full sm:w-1/3">
+            <label
+              htmlFor="order"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Sort By
+            </label>
+            <select
+              id="order"
+              value={order}
+              onChange={handleOrderChange}
+              className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
+            >
+              <option value="">None</option>
+              <option value="asc">Price: Low → High</option>
+              <option value="desc">Price: High → Low</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       {/* Product grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 bg-blue-200">
         {isLoading ? (
           Array.from({ length: rowsPerPage }).map((_, i) => (
             <div key={i} className="w-full max-w-xs mx-auto">
@@ -147,9 +193,9 @@ const Products = () => {
           onChange={handleRowsChange}
           className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
         >
-          <option value={4}>4</option>
           <option value={8}>8</option>
           <option value={12}>12</option>
+          <option value={16}>16</option>
         </select>
       </div>
     </div>
