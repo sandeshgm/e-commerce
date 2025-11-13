@@ -6,7 +6,7 @@ export default function ProductCard({ product }) {
     <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 p-4 flex flex-col items-center">
       <Link to={`/products/${product._id}`} className="w-full text-center">
         <img
-          src={product.image}
+          src={`http://localhost:3007/productsImage/${product?.image}`}
           alt={product.name}
           className="w-full h-56 object-cover rounded-lg mb-4"
         />

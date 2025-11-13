@@ -20,11 +20,45 @@ const addProducts = async (req, res) => {
 
 const getProducts = async (req, res) => {
   try {
-    const products = await Product.find({});
+    const {
+      page = 1,
+      limit = 4,
+      search = "",
+      order,
+      minPrice,
+      maxPrice,
+    } = req.query;
+
+    const filter = {};
+
+    if (search) {
+      filter.name = new RegExp(search, "i");
+    }
+
+    if (minPrice && maxPrice) {
+      filter.price = { $gte: Number(minPrice), $lte: Number(maxPrice) };
+    }
+
+    const sortByFilter = {};
+    if (order) {
+      sortByFilter.price = order === "desc" ? -1 : 1;
+    }
+
+    const products = await Product.find(filter)
+      .sort(sortByFilter)
+      .limit(Number(limit))
+      .skip((Number(page) - 1) * Number(limit));
+
+    const total = await Product.countDocuments(filter);
     res.status(200).json({
       message: "Data fetched successfull",
       products,
+      total,
+      page: Number(page),
+      totalPages: Math.ceil(total / Number(limit)),
     });
+    console.log({ page: Number(page), limit: Number(limit) });
+    console.log("Products returned:", products.length);
   } catch (error) {
     console.log("error in getting products", error);
     res.status(500).json({ message: "Server error" });

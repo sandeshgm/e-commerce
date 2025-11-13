@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 require("dotenv").config();
 
 const cors = require("cors");
@@ -13,11 +14,18 @@ const productRoutes = require("./routes/product.Routes.js");
 const orderRoutes = require("./routes/orderRoutes.js");
 
 //middleware
-app.use(cors({
-  origin: "http://localhost:5173",
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(express.json());
+
+app.use(
+  "/productsImage",
+  express.static(path.join(__dirname, "productsImage"))
+);
 
 //DB
 connectDb();
