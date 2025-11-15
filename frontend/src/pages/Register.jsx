@@ -6,7 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 import "react-toastify/dist/ReactToastify.css";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "../api/axios";
+import api from "../api/axios";
 
 // validation using yup
 const schema = yup.object().shape({
@@ -35,7 +35,7 @@ export default function Register() {
   // mutation to handle form submission
   const mutation = useMutation({
     mutationFn: async (data) => {
-      const res = await axios.post("/auth/register", data);
+      const res = await api.post("/auth/register", data);
       return res.data;
     },
     onSuccess: (data) => {

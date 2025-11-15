@@ -1,7 +1,9 @@
+// config/jsonWebToken.js
 const jwt = require("jsonwebtoken");
+const jwtSecret = require("./jwtSecret");
 
-const jwtToken = (userId, res) => {
-  const token = jwt.sign({ userId }, process.env.JWT_SECRET_KEY, {
+const createToken = (userId, res) => {
+  const token = jwt.sign({ userId }, jwtSecret, {
     expiresIn: "30d",
   });
 
@@ -17,4 +19,5 @@ const jwtToken = (userId, res) => {
   });
   return token;
 };
-module.exports = jwtToken;
+
+module.exports = createToken;

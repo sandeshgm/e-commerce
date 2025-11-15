@@ -2,7 +2,7 @@ import { useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { useQuery } from "@tanstack/react-query";
 import api from "../api/axios";
-import { Home } from "lucide-react";
+import Header from "../components/Header";  // import your header here
 import { useNavigate } from "react-router-dom";
 
 const Products = () => {
@@ -32,10 +32,6 @@ const Products = () => {
     setPage(1);
   };
 
-  const home = () => {
-    navigate("/");
-  };
-
   // Fetch products
   const { data, isLoading } = useQuery({
     queryKey: ["products", { order, page, rowsPerPage, search }],
@@ -54,7 +50,7 @@ const Products = () => {
 
   const totalPages = data ? Math.ceil(data.total / rowsPerPage) : 0;
 
-  //  loader
+  // Loader component
   const Loader = () => (
     <div className="animate-pulse space-y-4">
       <div className="w-full h-60 bg-gray-300 rounded-lg"></div>
@@ -64,141 +60,139 @@ const Products = () => {
   );
 
   return (
-    <div className="container mx-auto px-4 py-6 bg-blue-50">
-      {/* Top Bar */}
-      <div className="w-full bg-gray-300 border-b border-gray-400 shadow-lg py-6 px-8">
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
-          {/* Home Button */}
-          <button
-            onClick={home}
-            className="flex items-center gap-3 px-8 py-4 bg-indigo-700 text-white text-xl font-bold rounded-lg shadow-lg hover:bg-indigo-800 active:scale-95 transition-all duration-200"
-          >
-            <Home size={50} />
-            <span>Home</span>
-          </button>
+    <>
+      {/* Add Header here */}
+      <Header />
 
-          {/* Search bar */}
-          <div className="w-full sm:w-1/2">
-            <label
-              htmlFor="search"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Search
-            </label>
-            <input
-              id="search"
-              type="text"
-              value={search}
-              onChange={handleSearchChange}
-              placeholder="Search products..."
-              className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
+      <div className="container mx-auto px-4 py-6 bg-blue-50">
+        {/* Top Bar */}
+        <div className="w-full bg-gray-300 border-b border-gray-400 shadow-lg py-6 px-8">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
+            {/* Remove the Home Button here */}
 
-          {/* Sort dropdown */}
-          <div className="w-full sm:w-1/3">
-            <label
-              htmlFor="order"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Sort By
-            </label>
-            <select
-              id="order"
-              value={order}
-              onChange={handleOrderChange}
-              className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
-            >
-              <option value="">None</option>
-              <option value="asc">Price: Low → High</option>
-              <option value="desc">Price: High → Low</option>
-            </select>
+            {/* Search bar */}
+            <div className="w-full sm:w-1/2">
+              <label
+                htmlFor="search"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Search
+              </label>
+              <input
+                id="search"
+                type="text"
+                value={search}
+                onChange={handleSearchChange}
+                placeholder="Search products..."
+                className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
+            {/* Sort dropdown */}
+            <div className="w-full sm:w-1/3">
+              <label
+                htmlFor="order"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Sort By
+              </label>
+              <select
+                id="order"
+                value={order}
+                onChange={handleOrderChange}
+                className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="">None</option>
+                <option value="asc">Price: Low → High</option>
+                <option value="desc">Price: High → Low</option>
+              </select>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Product grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 bg-blue-200">
-        {isLoading ? (
-          Array.from({ length: rowsPerPage }).map((_, i) => (
-            <div key={i} className="w-full max-w-xs mx-auto">
-              <Loader />
-            </div>
-          ))
-        ) : data?.products?.length > 0 ? (
-          data.products.map((product) => (
-            <div key={product._id} className="w-full max-w-xs mx-auto">
-              <ProductCard product={product} />
-            </div>
-          ))
-        ) : (
-          <p className="text-center text-gray-600 col-span-full">
-            No products found.
-          </p>
-        )}
-      </div>
-
-      {/* Pagination */}
-      <div className="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div>
-          <span className="text-gray-600">
-            Total: {data?.total ?? 0} Products
-          </span>
+        {/* Product grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 bg-blue-200">
+          {isLoading ? (
+            Array.from({ length: rowsPerPage }).map((_, i) => (
+              <div key={i} className="w-full max-w-xs mx-auto">
+                <Loader />
+              </div>
+            ))
+          ) : data?.products?.length > 0 ? (
+            data.products.map((product) => (
+              <div key={product._id} className="w-full max-w-xs mx-auto">
+                <ProductCard product={product} />
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-gray-600 col-span-full">
+              No products found.
+            </p>
+          )}
         </div>
 
-        {/* Page numbers */}
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={() => handlePageChange(page - 1)}
-            disabled={page === 1}
-            className={`px-3 py-1 border rounded-md ${
-              page === 1
-                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                : "bg-white hover:bg-gray-100"
-            }`}
-          >
-            Prev
-          </button>
+        {/* Pagination */}
+        <div className="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div>
+            <span className="text-gray-600">
+              Total: {data?.total ?? 0} Products
+            </span>
+          </div>
 
-          {Array.from({ length: totalPages }, (_, i) => (
+          {/* Page numbers */}
+          <div className="flex items-center space-x-2">
             <button
-              key={i + 1}
-              onClick={() => handlePageChange(i + 1)}
+              onClick={() => handlePageChange(page - 1)}
+              disabled={page === 1}
               className={`px-3 py-1 border rounded-md ${
-                page === i + 1
-                  ? "bg-indigo-500 text-white"
+                page === 1
+                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                   : "bg-white hover:bg-gray-100"
               }`}
             >
-              {i + 1}
+              Prev
             </button>
-          ))}
 
-          <button
-            onClick={() => handlePageChange(page + 1)}
-            disabled={page === totalPages}
-            className={`px-3 py-1 border rounded-md ${
-              page === totalPages
-                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                : "bg-white hover:bg-gray-100"
-            }`}
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i + 1}
+                onClick={() => handlePageChange(i + 1)}
+                className={`px-3 py-1 border rounded-md ${
+                  page === i + 1
+                    ? "bg-indigo-500 text-white"
+                    : "bg-white hover:bg-gray-100"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+
+            <button
+              onClick={() => handlePageChange(page + 1)}
+              disabled={page === totalPages}
+              className={`px-3 py-1 border rounded-md ${
+                page === totalPages
+                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  : "bg-white hover:bg-gray-100"
+              }`}
+            >
+              Next
+            </button>
+          </div>
+
+          {/* Rows per page */}
+          <select
+            value={rowsPerPage}
+            onChange={handleRowsChange}
+            className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
           >
-            Next
-          </button>
+            <option value={8}>8</option>
+            <option value={12}>12</option>
+            <option value={16}>16</option>
+          </select>
         </div>
-
-        {/* Rows per page */}
-        <select
-          value={rowsPerPage}
-          onChange={handleRowsChange}
-          className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
-        >
-          <option value={8}>8</option>
-          <option value={12}>12</option>
-          <option value={16}>16</option>
-        </select>
       </div>
-    </div>
+    </>
   );
 };
 

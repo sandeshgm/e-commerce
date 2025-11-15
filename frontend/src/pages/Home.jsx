@@ -14,7 +14,9 @@ export default function Home() {
         }}
       >
         <div className="bg-black/50 p-10 rounded-2xl">
-          <h1 className="text-5xl font-extrabold mb-4">Welcome to Sports Center</h1>
+          <h1 className="text-5xl font-extrabold mb-4">
+            Welcome to Sports Center
+          </h1>
           <p className="text-lg max-w-xl mb-6">
             Discover the latest products, unbeatable deals, and premium quality
             items all in one place.
@@ -30,7 +32,7 @@ export default function Home() {
 
       {/* Optional Footer Section */}
       <footer className="bg-gray-900 text-gray-300 py-6 text-center">
-        <p>© {new Date().getFullYear()} ShopEase. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Sports Center. All rights reserved.</p>
       </footer>
     </div>
   );

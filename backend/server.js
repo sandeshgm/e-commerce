@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
 const cors = require("cors");
@@ -20,6 +21,7 @@ app.use(
     credentials: true,
   })
 );
+app.use(cookieParser());
 app.use(express.json());
 
 app.use(

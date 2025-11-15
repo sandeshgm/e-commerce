@@ -1,11 +1,12 @@
-import React from "react";
+import { React, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import axios from "../api/axios";
-import { Link, useNavigate } from "react-router-dom";
+import api from "../api/axios";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { AuthContext } from "../context/AuthProvider";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -14,6 +15,12 @@ const schema = yup.object().shape({
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { setAuthUser } = useContext(AuthContext);
+
+  // Get the `from` path user tried to visit (default to '/')
+  const from = location.state?.from || "/";
+
   const {
     register,
     handleSubmit,
@@ -24,14 +31,15 @@ export default function Login() {
 
   const mutation = useMutation({
     mutationFn: async (data) => {
-      const res = await axios.post("/auth/login", data);
+      const res = await api.post("/auth/login", data);
       return res.data;
     },
     onSuccess: (data) => {
       localStorage.setItem("user", JSON.stringify(data.user));
+      setAuthUser(data.user);
       localStorage.setItem("token", data.token);
       toast.success("Login successful!");
-      navigate("/home");
+      navigate(from, { replace: true }); // Redirect to original page or fallback
     },
     onError: (error) => {
       const message = error.response?.data?.message || "Login failed";
@@ -71,10 +79,10 @@ export default function Login() {
 
           <button
             type="submit"
-            disabled={mutation.isPending}
+            disabled={mutation.isLoading}
             className="w-full bg-blue-600 text-white py-2 rounded-lg"
           >
-            {mutation.isPending ? "Logging in..." : "Login"}
+            {mutation.isLoading ? "Logging in..." : "Login"}
           </button>
 
           <p className="text-center text-sm text-gray-600">
