@@ -12,10 +12,12 @@ export default function ProductCard({ product }) {
         />
       </Link>
 
-      <h3 className="text-3xl font-semibold text-black hover:text-gray-600 transition cursor-pointer">
+      <h3 className="text-xl font-semibold text-black hover:text-gray-600 transition cursor-pointer">
         {product.name}
       </h3>
-      <p className="text-orange-600 text-md font-medium mt-1 hover:cursor-pointer">${product.price}</p>
+      <p className="text-orange-600 text-md font-medium mt-1 hover:cursor-pointer">
+        Rs. {product.price}
+      </p>
     </div>
   );
 }

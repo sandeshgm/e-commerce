@@ -1,5 +1,7 @@
 import React from "react";
 import Header from "../components/Header";
+import FeaturedProducts from "../components/FeaturedProducts";
+import LatestProducts from "../components/LatestProduct";
 
 export default function Home() {
   return (
@@ -29,6 +31,8 @@ export default function Home() {
           </a>
         </div>
       </section>
+
+      <LatestProducts />
 
       {/* Optional Footer Section */}
       <footer className="bg-gray-900 text-gray-300 py-6 text-center">

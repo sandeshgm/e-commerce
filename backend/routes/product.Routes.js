@@ -5,6 +5,8 @@ const {
   getProductById,
   deleteProducts,
   updateProducts,
+  getFeaturedProducts,
+  getLatestPRoducts,
 } = require("../controllers/productController");
 const router = express.Router();
 const multer = require("multer");
@@ -24,6 +26,8 @@ const upload = multer({ storage: storage });
 
 router.post("/", upload.single("image"), addProducts);
 router.get("/", getProducts);
+router.get("/featured", getFeaturedProducts);
+router.get("/latest", getLatestPRoducts);
 router.get("/:id", getProductById);
 router.delete("/:id", checkAuthAdmin, deleteProducts);
 router.patch("/:id", upload.single("image"), checkAuthAdmin, updateProducts);

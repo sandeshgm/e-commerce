@@ -79,9 +79,9 @@ export default function Header() {
           <a href="/products" className="hover:text-blue-600">
             Products
           </a>
-          <a href="/about" className="hover:text-blue-600">
+          {/* <a href="/about" className="hover:text-blue-600">
             About
-          </a>
+          </a> */}
 
           <a
             href="/orders"

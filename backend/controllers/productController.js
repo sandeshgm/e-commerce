@@ -104,10 +104,28 @@ const updateProducts = async (req, res) => {
   }
 };
 
+const getFeaturedProducts = async (req, res) => {
+  const products = await Product.find({ featured: true }).limit(4);
+  res.status(200).json({
+    message: "Product fetched successfully",
+    data: products,
+  });
+};
+
+const getLatestPRoducts = async (req, res) => {
+  const products = await Product.find().sort({ createdAt: "desc" }).limit(4);
+  res.status(200).json({
+    message: "Product fetched successfully",
+    data: products,
+  });
+};
+
 module.exports = {
   addProducts,
   getProducts,
   deleteProducts,
   getProductById,
   updateProducts,
+  getFeaturedProducts,
+  getLatestPRoducts,
 };
